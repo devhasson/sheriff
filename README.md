@@ -44,6 +44,7 @@ A powerful Discord bot that allows users to create and manage temporary voice ch
 | `/voice-unban @user`    | Unbans a user from your voice channel                     |
 | `/voice-kick @user`     | Kicks a user from your voice channel                      |
 | `/voice-transfer @user` | Transfers ownership of your voice channel to another user |
+| `/voice-limit <number>` | Sets the user limit for your voice channel                |
 
 ## Requirements 🔧
 
