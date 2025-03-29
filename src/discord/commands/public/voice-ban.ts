@@ -4,7 +4,7 @@ import {
   ApplicationCommandType,
   PermissionFlagsBits,
 } from "discord.js";
-import { userBannedEmbed } from "discord/embeds/user-banned.js";
+import { userBannedEmbed } from "#embeds";
 import { validateVoiceCommand } from "#functions";
 
 createCommand({
@@ -23,7 +23,6 @@ createCommand({
     const { options } = interaction;
     const user = options.getUser("user", true);
 
-    // Validate voice channel command requirements
     const validation = await validateVoiceCommand(interaction, user);
 
     if (!validation.isValid) {
@@ -34,7 +33,6 @@ createCommand({
 
     const { voiceChannel } = validation;
 
-    // Ban the user from the voice channel
     await voiceChannel.edit({
       permissionOverwrites: [
         {

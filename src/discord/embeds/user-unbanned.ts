@@ -4,7 +4,7 @@ import { createUserActionEmbed } from "#functions";
 export const userUnbannedEmbed = (user: User) =>
   createUserActionEmbed({
     user,
-    actionTitle: "✅ User Unbanned",
+    actionTitle: "User Unbanned",
     action: "has been unbanned from the voice channel",
-    color: Colors.Green,
+    color: Colors.DarkButNotBlack,
   });

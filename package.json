@@ -33,6 +33,9 @@
     "#database": [
       "./build/database/index.js"
     ],
+    "#embeds": [
+      "./build/discord/embeds/index.js"
+    ],
     "#base": [
       "./build/discord/base/index.js"
     ],

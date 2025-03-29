@@ -3,7 +3,7 @@ import {
   ApplicationCommandType,
 } from "discord.js";
 import { createCommand } from "#base";
-import { userKickedEmbed } from "discord/embeds/user-kicked.js";
+import { userKickedEmbed } from "#embeds";
 import { validateVoiceCommand } from "#functions";
 
 createCommand({
@@ -22,7 +22,6 @@ createCommand({
     const { options } = interaction;
     const user = options.getUser("user", true);
 
-    // Validate voice channel command requirements
     const validation = await validateVoiceCommand(interaction, user);
 
     if (!validation.isValid) {
@@ -33,7 +32,6 @@ createCommand({
 
     const { member } = validation;
 
-    // Kick the user from voice channel
     await member.voice.disconnect();
 
     return interaction.reply({

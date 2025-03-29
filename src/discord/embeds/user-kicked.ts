@@ -4,7 +4,7 @@ import { createUserActionEmbed } from "#functions";
 export const userKickedEmbed = (user: User) =>
   createUserActionEmbed({
     user,
-    actionTitle: "👢 User Kicked",
+    actionTitle: "User Kicked",
     action: "has been kicked from the voice channel",
-    color: Colors.Yellow,
+    color: Colors.DarkButNotBlack,
   });

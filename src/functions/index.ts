@@ -5,12 +5,19 @@ import {
   ChannelType,
   Colors,
   Guild,
+  GuildMember,
+  Interaction,
+  InteractionReplyOptions,
+  MessageFlags,
   User,
+  VoiceChannel,
 } from "discord.js";
-import { prisma } from "#database";
-import { notOwnerOfVoiceChannelEmbed } from "discord/embeds/not-owner-of-voice-channel.js";
-import { notVoiceChannelEmbed } from "discord/embeds/not-voice-channel.js";
-import { userNotFoundEmbed } from "discord/embeds/user-not-found.js";
+import { prisma, Guild as GuildModel } from "#database";
+import {
+  notOwnerOfVoiceChannelEmbed,
+  notVoiceChannelEmbed,
+  userNotFoundEmbed,
+} from "#embeds";
 
 /**
  * Creates a standardized embed with consistent styling
@@ -20,7 +27,7 @@ export function createStandardEmbed({
   description,
   color = Colors.Blue,
   thumbnail,
-  timestamp = true,
+  timestamp = false,
 }: {
   title: string;
   description: string;
@@ -33,7 +40,6 @@ export function createStandardEmbed({
     description,
     color,
     thumbnail: thumbnail ? { url: thumbnail } : undefined,
-    footer: { text: "Sheriff Voice Manager" },
     timestamp: timestamp ? new Date() : undefined,
   });
 }
@@ -54,7 +60,7 @@ export function createUserActionEmbed({
 }) {
   return createStandardEmbed({
     title: actionTitle,
-    description: `**${user.displayName}** ${action}`,
+    description: `**@${user.displayName}** ${action}`,
     color,
     thumbnail: user.displayAvatarURL({ extension: "png" }) || "",
   });
@@ -123,20 +129,50 @@ export function getGuildThumbnail(guild: Guild): string {
   return guild.iconURL({ extension: "png" }) || "";
 }
 
+interface ValidationError {
+  isValid: false;
+  errorReply: InteractionReplyOptions & {
+    withResponse: true;
+  };
+}
+
+interface ValidationSuccess {
+  isValid: true;
+  member: GuildMember;
+  voiceChannel: VoiceChannel;
+  guildData: GuildModel;
+}
+
+type ValidationResult = ValidationError | ValidationSuccess;
+
 /**
  * Validates if the interaction is in a voice channel and the user is the owner
  * Used to reduce repetition in voice channel commands
  */
-export async function validateVoiceCommand(interaction: any, targetUser: User) {
-  if (!interaction.guild) return { isValid: false };
-
-  const channel = interaction.channel;
-  if (channel?.type !== ChannelType.GuildVoice) {
+export async function validateVoiceCommand(
+  interaction: Interaction,
+  targetUser: User
+): Promise<ValidationResult> {
+  if (!interaction.guild) {
     return {
       isValid: false,
       errorReply: {
         embeds: [notVoiceChannelEmbed],
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
+        withResponse: true,
+      },
+    };
+  }
+
+  const channel = interaction.channel;
+
+  if (!channel || channel.type !== ChannelType.GuildVoice) {
+    return {
+      isValid: false,
+      errorReply: {
+        embeds: [notVoiceChannelEmbed],
+        flags: MessageFlags.Ephemeral,
+        withResponse: true,
       },
     };
   }
@@ -149,7 +185,8 @@ export async function validateVoiceCommand(interaction: any, targetUser: User) {
       isValid: false,
       errorReply: {
         embeds: [userNotFoundEmbed],
-        ephemeral: true,
+        withResponse: true,
+        flags: MessageFlags.Ephemeral,
       },
     };
   }
@@ -158,7 +195,16 @@ export async function validateVoiceCommand(interaction: any, targetUser: User) {
     where: { id: interaction.guild.id },
   });
 
-  if (!guildOnDatabase) return { isValid: false };
+  if (!guildOnDatabase) {
+    return {
+      isValid: false,
+      errorReply: {
+        embeds: [notVoiceChannelEmbed],
+        flags: MessageFlags.Ephemeral,
+        withResponse: true,
+      },
+    };
+  }
 
   const isOwnerOfChannel =
     channel.name ===
@@ -169,15 +215,16 @@ export async function validateVoiceCommand(interaction: any, targetUser: User) {
       isValid: false,
       errorReply: {
         embeds: [notOwnerOfVoiceChannelEmbed],
-        ephemeral: true,
+        withResponse: true,
+        flags: MessageFlags.Ephemeral,
       },
     };
   }
 
   return {
     isValid: true,
-    voiceChannel: channel,
     member,
+    voiceChannel: channel,
     guildData: guildOnDatabase,
   };
 }

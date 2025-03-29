@@ -5,10 +5,13 @@ import {
   ChannelType,
 } from "discord.js";
 
-import { limitDeniedCommonUserEmbed } from "discord/embeds/limit-denied-common-user.js";
-import { limitHasBeenSetEmbed } from "discord/embeds/limit-has-been-set.js";
-import { notOwnerOfVoiceChannelEmbed } from "discord/embeds/not-owner-of-voice-channel.js";
-import { notVoiceChannelEmbed } from "discord/embeds/not-voice-channel.js";
+import {
+  limitDeniedCommonUserEmbed,
+  limitDeniedBoosterUserEmbed,
+  limitHasBeenSetEmbed,
+  notOwnerOfVoiceChannelEmbed,
+  notVoiceChannelEmbed,
+} from "#embeds";
 import { prisma } from "#database";
 
 createCommand({
@@ -20,6 +23,7 @@ createCommand({
       name: "limit",
       description: "The limit of the voice channel",
       type: ApplicationCommandOptionType.Integer,
+      min_value: 2,
       required: true,
     },
   ],
@@ -35,15 +39,6 @@ createCommand({
       });
     }
 
-    const isBoosterUser = Boolean(interaction.member?.premiumSince);
-
-    if (!isBoosterUser && limit > 5) {
-      return interaction.reply({
-        embeds: [limitDeniedCommonUserEmbed],
-        ephemeral: true,
-      });
-    }
-
     const guildOnDatabase = await prisma.guild.findUnique({
       where: {
         id: interaction.guild.id,
@@ -51,6 +46,24 @@ createCommand({
     });
 
     if (!guildOnDatabase) return;
+
+    const isBoosterUser = Boolean(interaction.member?.premiumSince);
+
+    if (!isBoosterUser && limit > guildOnDatabase.channelLimitForNormalUsers) {
+      return interaction.reply({
+        embeds: [limitDeniedCommonUserEmbed],
+        ephemeral: true,
+      });
+    }
+
+    if (isBoosterUser && limit > guildOnDatabase.channelLimitForBoosters) {
+      return interaction.reply({
+        embeds: [
+          limitDeniedBoosterUserEmbed(guildOnDatabase.channelLimitForBoosters),
+        ],
+        ephemeral: true,
+      });
+    }
 
     const isOwnerOfChannel =
       channel?.name ===

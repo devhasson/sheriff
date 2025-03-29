@@ -3,7 +3,7 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
 } from "discord.js";
-import { voiceChannelTransferredEmbed } from "discord/embeds/voice-channel-transferred.js";
+import { voiceChannelTransferredEmbed } from "#embeds";
 import { validateVoiceCommand } from "#functions";
 
 createCommand({
@@ -22,7 +22,6 @@ createCommand({
     const { options } = interaction;
     const user = options.getUser("user", true);
 
-    // Validate voice channel command requirements
     const validation = await validateVoiceCommand(interaction, user);
 
     if (!validation.isValid) {
@@ -33,7 +32,13 @@ createCommand({
 
     const { voiceChannel, guildData } = validation;
 
-    // Transfer ownership by changing channel name
+    if (!guildData) {
+      return interaction.reply({
+        content: "Something went wrong",
+        ephemeral: true,
+      });
+    }
+
     await voiceChannel.edit({
       name: `${user.username}'s - ${guildData.temporaryChannelComplement}`,
     });
