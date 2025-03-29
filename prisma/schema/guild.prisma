@@ -1,12 +1,12 @@
 model Guild {
-    id                         String @id @unique
-    categoryName               String @map("category_name")
-    voiceChannelName           String @map("voice_channel_name")
-    temporaryChannelComplement String @map("temporary_channel_complement")
-    channelLimitForNormalUsers Int    @default(5) @map("channel_limit_for_normal_users")
-    channelLimitForBoosters    Int    @default(15) @map("channel_limit_for_boosters")
-
-    channels GuildChannel[]
+    id                         String         @id @unique
+    categoryName               String         @map("category_name")
+    voiceChannelName           String         @map("voice_channel_name")
+    temporaryChannelComplement String         @map("temporary_channel_complement")
+    channelLimitForNormalUsers Int            @default(5) @map("channel_limit_for_normal_users")
+    channelLimitForBoosters    Int            @default(15) @map("channel_limit_for_boosters")
+    allowedGuild               DateTime?      @map("allowed_guild")
+    channels                   GuildChannel[]
 
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")
