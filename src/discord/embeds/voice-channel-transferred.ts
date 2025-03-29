@@ -1,10 +1,10 @@
 import { Colors, User } from "discord.js";
-import { createUserActionEmbed } from "#functions";
+import { createEmbed } from "@magicyan/discord";
 
 export const voiceChannelTransferredEmbed = (user: User) =>
-  createUserActionEmbed({
-    user,
-    actionTitle: "Channel Ownership Transferred",
-    action: "is now the new owner of this voice channel",
+  createEmbed({
+    title: "Channel Ownership Transferred",
+    description: `@${user.displayName} is now the new owner of this voice channel`,
+    thumbnail: user.displayAvatarURL({ extension: "png" }),
     color: Colors.DarkButNotBlack,
   });

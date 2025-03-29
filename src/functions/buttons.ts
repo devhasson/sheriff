@@ -1,51 +1,18 @@
-import { ButtonBuilder, ButtonStyle } from "discord.js";
-
-export function createStandardButton({
-  id,
-  label,
-  emoji,
-  style = ButtonStyle.Primary,
-}: {
-  id: string;
-  label: string;
-  emoji?: string;
-  style?:
-    | ButtonStyle.Primary
-    | ButtonStyle.Secondary
-    | ButtonStyle.Success
-    | ButtonStyle.Danger
-    | ButtonStyle.Premium
-    | undefined;
-}) {
-  return new ButtonBuilder({
-    customId: id,
-    label,
-    emoji,
-    style: style,
-  });
-}
+import {
+  APIButtonComponent,
+  ButtonBuilder,
+  ButtonComponentData,
+} from "discord.js";
 
 export function createConfigButton({
   step,
-  label,
-  emoji,
-  style = ButtonStyle.Primary,
+  data,
 }: {
   step: string;
-  label: string;
-  emoji?: string;
-  style?:
-    | ButtonStyle.Primary
-    | ButtonStyle.Secondary
-    | ButtonStyle.Success
-    | ButtonStyle.Danger
-    | ButtonStyle.Premium
-    | undefined;
+  data: Partial<ButtonComponentData> | Partial<APIButtonComponent>;
 }) {
-  return createStandardButton({
-    id: `config/${step}`,
-    label,
-    emoji,
-    style,
+  return new ButtonBuilder({
+    customId: `config/${step}`,
+    ...data,
   });
 }

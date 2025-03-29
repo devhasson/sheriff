@@ -1,10 +1,10 @@
 import { Colors, User } from "discord.js";
-import { createUserActionEmbed } from "#functions";
+import { createEmbed } from "@magicyan/discord";
 
 export const userBannedEmbed = (user: User) =>
-  createUserActionEmbed({
-    user,
-    actionTitle: "User Banned",
-    action: "has been banned from the voice channel",
+  createEmbed({
+    title: "User Banned",
+    description: `${user.displayName} has been banned from the voice channel`,
+    thumbnail: user.displayAvatarURL({ extension: "png" }),
     color: Colors.DarkButNotBlack,
   });

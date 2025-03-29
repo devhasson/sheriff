@@ -1,12 +1,8 @@
 import { createEvent } from "#base";
 import { prisma } from "#database";
-import { createRow } from "@magicyan/discord";
+import { createEmbed, createRow } from "@magicyan/discord";
 import { ButtonStyle, ChannelType } from "discord.js";
-import {
-  createConfigButton,
-  createStandardEmbed,
-  getGuildThumbnail,
-} from "#functions";
+import { createConfigButton, getGuildThumbnail } from "#functions";
 
 createEvent({
   name: "onJoinGuild",
@@ -39,7 +35,7 @@ createEvent({
       if (isDeletedGuild) {
         return await onboardingChannel.send({
           embeds: [
-            createStandardEmbed({
+            createEmbed({
               title: "🤠 Welcome to Sheriff Voice Manager!",
               description: `**Create and manage temporary voice channels with ease**\n
               **How it works:**
@@ -56,14 +52,18 @@ createEvent({
             createRow(
               createConfigButton({
                 step: "start",
-                label: "Configure Sheriff",
-                emoji: "⚙️",
+                data: {
+                  label: "Configure Sheriff",
+                  emoji: "⚙️",
+                },
               }),
               createConfigButton({
                 step: "already-setup",
-                label: "I already have a setup",
-                emoji: "🤝",
-                style: ButtonStyle.Secondary,
+                data: {
+                  label: "I already have a setup",
+                  emoji: "🤝",
+                  style: ButtonStyle.Secondary,
+                },
               })
             ),
           ],

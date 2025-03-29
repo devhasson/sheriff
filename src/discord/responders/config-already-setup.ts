@@ -1,14 +1,9 @@
 import { createResponder, ResponderType } from "#base";
 import { prisma } from "#database";
 import { logger } from "#settings";
-import { createRow } from "@magicyan/discord";
+import { createEmbed, createRow } from "@magicyan/discord";
 import { ButtonStyle, Colors } from "discord.js";
-import {
-  createConfigButton,
-  createStandardButton,
-  createStandardEmbed,
-  getGuildThumbnail,
-} from "#functions";
+import { createConfigButton, getGuildThumbnail } from "#functions";
 
 createResponder({
   customId: "config/already-setup",
@@ -51,8 +46,10 @@ createResponder({
             createRow(
               createConfigButton({
                 step: "start",
-                label: "You must complete the setup",
-                emoji: "⚙️",
+                data: {
+                  label: "You must complete the setup",
+                  emoji: "⚙️",
+                },
               })
             ),
           ],
@@ -61,7 +58,7 @@ createResponder({
 
       await interaction.update({
         embeds: [
-          createStandardEmbed({
+          createEmbed({
             title: "✅ Setup Complete!",
             description: `**Your Sheriff Voice Manager is now ready to use!**
   
@@ -78,11 +75,13 @@ createResponder({
       return await interaction.followUp({
         components: [
           createRow(
-            createStandardButton({
-              id: "config/cleanup",
-              label: "Delete Setup Channel",
-              emoji: "🗑️",
-              style: ButtonStyle.Secondary,
+            createConfigButton({
+              step: "cleanup",
+              data: {
+                label: "Delete Setup Channel",
+                emoji: "🗑️",
+                style: ButtonStyle.Secondary,
+              },
             })
           ),
         ],

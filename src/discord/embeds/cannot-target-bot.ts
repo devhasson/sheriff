@@ -1,7 +1,7 @@
 import { Colors } from "discord.js";
-import { createStandardEmbed } from "#functions";
+import { createEmbed } from "@magicyan/discord";
 
-export const cannotTargetBotEmbed = createStandardEmbed({
+export const cannotTargetBotEmbed = createEmbed({
   title: "❌ Invalid Target",
   description: "You cannot perform this action on a bot.",
   color: Colors.NotQuiteBlack,

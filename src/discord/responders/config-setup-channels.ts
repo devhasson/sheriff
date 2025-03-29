@@ -2,7 +2,7 @@ import { createResponder, ResponderType } from "#base";
 import { prisma } from "#database";
 import { logger } from "#settings";
 import { createRow } from "@magicyan/discord";
-import { ButtonStyle, ChannelType } from "discord.js";
+import { ChannelType } from "discord.js";
 import { createConfigButton } from "#functions";
 
 createResponder({
@@ -72,10 +72,11 @@ createResponder({
       components: [
         createRow(
           createConfigButton({
-            step: "setup-limits",
-            label: "Continue Setup",
-            emoji: "➡️",
-            style: ButtonStyle.Success,
+            step: "complete",
+            data: {
+              label: "Continue Setup",
+              emoji: "✅",
+            },
           })
         ),
       ],

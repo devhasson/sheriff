@@ -1,7 +1,7 @@
 import { Colors } from "discord.js";
-import { createStandardEmbed } from "#functions";
+import { createEmbed } from "@magicyan/discord";
 
-export const notVoiceChannelEmbed = createStandardEmbed({
+export const notVoiceChannelEmbed = createEmbed({
   title: "Voice Channel Required",
   description:
     "This command can only be used inside voice channels. Please join one first.",
