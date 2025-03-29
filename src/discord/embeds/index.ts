@@ -8,3 +8,5 @@ export * from "./limit-has-been-set.js";
 export * from "./user-kicked.js";
 export * from "./user-unbanned.js";
 export * from "./limit-denied-booster-user.js";
+export * from "./cannot-target-self.js";
+export * from "./cannot-target-bot.js";
