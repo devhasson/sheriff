@@ -5,6 +5,9 @@ export const userUnbannedEmbed = (user: User) =>
   createEmbed({
     title: "User Unbanned",
     description: `${user.displayName} has been unbanned from the voice channel`,
-    thumbnail: user.displayAvatarURL({ extension: "png" }),
+    thumbnail: {
+      url: user.displayAvatarURL({ extension: "png" }),
+      name: user.displayName,
+    },
     color: Colors.DarkButNotBlack,
   });

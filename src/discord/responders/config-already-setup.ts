@@ -1,97 +1,36 @@
 import { createResponder, ResponderType } from "#base";
-import { prisma } from "#database";
-import { logger } from "#settings";
-import { createEmbed, createRow } from "@magicyan/discord";
-import { ButtonStyle, Colors } from "discord.js";
-import { createConfigButton, getGuildThumbnail } from "#functions";
+import { createModalFields } from "@magicyan/discord";
+import { TextInputStyle } from "discord.js";
 
 createResponder({
   customId: "config/already-setup",
   types: [ResponderType.Button],
   cache: "cached",
   async run(interaction) {
-    const { guild } = interaction;
-
-    try {
-      const guildOnDatabase = await prisma.guild.update({
-        where: { id: guild.id },
-        data: {
-          deletedAt: null,
+    return await interaction.showModal({
+      customId: "config/already-setup/channels",
+      title: "Channel Limits Configuration",
+      components: createModalFields({
+        categoryId: {
+          label: "Category ID",
+          placeholder: "Category ID",
+          style: TextInputStyle.Paragraph,
+          required: true,
         },
-      });
-
-      logger.success(`Guild ${guild.id} updated on database.`);
-
-      if (!guildOnDatabase) {
-        return await interaction.reply({
-          content: "Something went wrong. Please, try again later.",
-          ephemeral: true,
-        });
-      }
-
-      const validateCategory = guild.channels.cache.find(
-        (channel) => channel.name === guildOnDatabase.categoryName
-      );
-
-      const validateVoiceChannel = guild.channels.cache.find(
-        (channel) => channel.name === guildOnDatabase.voiceChannelName
-      );
-
-      const checkIfGuildIsAlreadySetup =
-        validateCategory && validateVoiceChannel;
-
-      if (!checkIfGuildIsAlreadySetup) {
-        return await interaction.update({
-          components: [
-            createRow(
-              createConfigButton({
-                step: "start",
-                data: {
-                  label: "You must complete the setup",
-                  emoji: "⚙️",
-                },
-              })
-            ),
-          ],
-        });
-      }
-
-      await interaction.update({
-        embeds: [
-          createEmbed({
-            title: "✅ Setup Complete!",
-            description: `**Your Sheriff Voice Manager is now ready to use!**
-  
-            Users can now create temporary voice channels by joining the voice channel that was just created.
-            
-            **Need Help?**
-            Contact our support team at davihasson@gmail.com`,
-            color: Colors.Green,
-            thumbnail: getGuildThumbnail(guild),
-          }),
-        ],
-      });
-
-      return await interaction.followUp({
-        components: [
-          createRow(
-            createConfigButton({
-              step: "cleanup",
-              data: {
-                label: "Delete Setup Channel",
-                emoji: "🗑️",
-                style: ButtonStyle.Secondary,
-              },
-            })
-          ),
-        ],
-      });
-    } catch (error) {
-      logger.error(error);
-      return await interaction.reply({
-        content: "Something went wrong. Please, try again later.",
-        ephemeral: true,
-      });
-    }
+        voiceChannelId: {
+          label: "Voice Channel ID",
+          placeholder: "Voice Channel ID",
+          style: TextInputStyle.Paragraph,
+          required: true,
+        },
+        temporaryChannelComplement: {
+          label: "Temporary Channel Complement",
+          placeholder: "Temporary Channel Complement",
+          style: TextInputStyle.Paragraph,
+          maxLength: 64,
+          required: true,
+        },
+      }),
+    });
   },
 });

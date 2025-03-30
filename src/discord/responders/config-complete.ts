@@ -2,8 +2,7 @@ import { createResponder, ResponderType } from "#base";
 import { prisma } from "#database";
 import { logger } from "#settings";
 import { createEmbed, createRow } from "@magicyan/discord";
-import { ButtonStyle, Colors } from "discord.js";
-import { createConfigButton, getGuildThumbnail } from "#functions";
+import { ButtonBuilder, ButtonStyle, Colors } from "discord.js";
 
 createResponder({
   customId: "config/setup/complete",
@@ -48,18 +47,19 @@ createResponder({
           **Need Help?**
           Contact our support team at davihasson@gmail.com`,
           color: Colors.Green,
-          thumbnail: getGuildThumbnail(guild),
+          thumbnail: {
+            url: guild.iconURL({ extension: "png" }) || "",
+            name: guild.name,
+          },
         }),
       ],
       components: [
         createRow(
-          createConfigButton({
-            step: "cleanup",
-            data: {
-              label: "Delete Setup Channel",
-              emoji: "🗑️",
-              style: ButtonStyle.Secondary,
-            },
+          new ButtonBuilder({
+            customId: "config/cleanup",
+            label: "Delete Setup Channel",
+            emoji: "🗑️",
+            style: ButtonStyle.Secondary,
           })
         ),
       ],

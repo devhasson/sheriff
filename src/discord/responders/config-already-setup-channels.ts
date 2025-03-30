@@ -5,47 +5,62 @@ import { createRow } from "@magicyan/discord";
 import { ButtonBuilder, ButtonStyle, ChannelType } from "discord.js";
 
 createResponder({
-  customId: "config/setup/channels",
+  customId: "config/already-setup/channels",
   types: [ResponderType.ModalComponent],
   cache: "cached",
   async run(interaction) {
     const { fields, guild } = interaction;
 
-    const categoryName = fields.getTextInputValue("categoryName");
-    const voiceChannelName = fields.getTextInputValue("voiceChannelName");
+    const categoryId = fields.getTextInputValue("categoryId");
+    const voiceChannelId = fields.getTextInputValue("voiceChannelId");
     const temporaryChannelComplement = fields.getTextInputValue(
       "temporaryChannelComplement"
     );
+
+    const category = await guild.channels.fetch(categoryId);
+
+    if (!category || category.type !== ChannelType.GuildCategory) {
+      return await interaction.reply({
+        content: "Invalid category ID.",
+        ephemeral: true,
+      });
+    }
+
+    const voiceChannel = await guild.channels.fetch(voiceChannelId);
+
+    if (!voiceChannel || voiceChannel.type !== ChannelType.GuildVoice) {
+      return await interaction.reply({
+        content: "Invalid voice channel ID.",
+        ephemeral: true,
+      });
+    }
 
     try {
       await prisma.guild.upsert({
         where: { id: guild.id },
         update: {
-          categoryName,
-          voiceChannelName,
+          categoryName: category.name,
+          voiceChannelName: voiceChannel.name,
           temporaryChannelComplement,
           deletedAt: null,
         },
         create: {
           id: guild.id,
-          categoryName,
-          voiceChannelName,
+          categoryName: category.name,
+          voiceChannelName: voiceChannel.name,
           temporaryChannelComplement,
         },
       });
-
-      logger.success(`Guild ${guild.id} created on database.`);
     } catch (error) {
       logger.error(error);
       return await interaction.reply({
-        content:
-          "An error occurred while creating the guild. Please, try again later.",
+        content: "Error on guild configuration.",
         ephemeral: true,
       });
     }
 
-    const category = await guild.channels.create({
-      name: categoryName,
+    await guild.channels.create({
+      name: category.name,
       type: ChannelType.GuildCategory,
       permissionOverwrites: [
         {
@@ -56,7 +71,7 @@ createResponder({
     });
 
     await guild.channels.create({
-      name: voiceChannelName,
+      name: voiceChannel.name,
       type: ChannelType.GuildVoice,
       parent: category,
       permissionOverwrites: [
