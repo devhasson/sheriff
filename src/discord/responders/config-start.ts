@@ -8,7 +8,7 @@ createResponder({
   cache: "cached",
   async run(interaction) {
     return await interaction.showModal({
-      customId: "config/setup/channels",
+      customId: "config/channels",
       title: "Configure Sheriff Voice Manager",
       components: createModalFields({
         categoryName: {
