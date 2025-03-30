@@ -1,5 +1,5 @@
 model Guild {
-    id                         String         @id @unique @default(uuid())
+    id                         String         @id @unique
     categoryName               String         @map("category_name")
     voiceChannelName           String         @map("voice_channel_name")
     temporaryChannelComplement String         @map("temporary_channel_complement")
