@@ -10,3 +10,4 @@ export * from "./user-unbanned.js";
 export * from "./limit-denied-booster-user.js";
 export * from "./cannot-target-self.js";
 export * from "./cannot-target-bot.js";
+export * from "./sheriff-not-configured.js";

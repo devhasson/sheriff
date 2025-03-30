@@ -14,6 +14,7 @@ import {
   userNotFoundEmbed,
   cannotTargetSelfEmbed,
   cannotTargetBotEmbed,
+  sheriffNotConfiguredEmbed,
 } from "#embeds";
 
 interface ValidationError {
@@ -105,7 +106,7 @@ export async function validateVoiceCommand(
     return {
       isValid: false,
       errorReply: {
-        embeds: [notVoiceChannelEmbed],
+        embeds: [sheriffNotConfiguredEmbed],
         flags: MessageFlags.Ephemeral,
         withResponse: true,
       },
