@@ -59,35 +59,11 @@ createResponder({
       });
     }
 
-    await guild.channels.create({
-      name: category.name,
-      type: ChannelType.GuildCategory,
-      permissionOverwrites: [
-        {
-          id: guild.id,
-          allow: ["ViewChannel", "SendMessages", "ReadMessageHistory"],
-        },
-      ],
-    });
-
-    await guild.channels.create({
-      name: voiceChannel.name,
-      type: ChannelType.GuildVoice,
-      parent: category,
-      permissionOverwrites: [
-        {
-          id: guild.id,
-          allow: ["ViewChannel", "Connect"],
-          deny: ["Speak", "SendMessages", "ReadMessageHistory"],
-        },
-      ],
-    });
-
     return await interaction.update({
       components: [
         createRow(
           new ButtonBuilder({
-            customId: "config/complete",
+            customId: "config/limits",
             label: "Continue Setup",
             emoji: "✅",
             style: ButtonStyle.Success,

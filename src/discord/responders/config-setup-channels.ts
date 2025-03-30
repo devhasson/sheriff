@@ -5,7 +5,7 @@ import { createRow } from "@magicyan/discord";
 import { ButtonBuilder, ButtonStyle, ChannelType } from "discord.js";
 
 createResponder({
-  customId: "config/setup/channels",
+  customId: "config/channels",
   types: [ResponderType.ModalComponent],
   cache: "cached",
   async run(interaction) {
@@ -72,7 +72,7 @@ createResponder({
       components: [
         createRow(
           new ButtonBuilder({
-            customId: "config/complete",
+            customId: "config/limits",
             label: "Continue Setup",
             emoji: "✅",
             style: ButtonStyle.Success,

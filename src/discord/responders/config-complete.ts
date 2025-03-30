@@ -5,7 +5,7 @@ import { createEmbed, createRow } from "@magicyan/discord";
 import { ButtonBuilder, ButtonStyle, Colors } from "discord.js";
 
 createResponder({
-  customId: "config/setup/complete",
+  customId: "config/complete",
   types: [ResponderType.ModalComponent],
   cache: "cached",
   async run(interaction) {

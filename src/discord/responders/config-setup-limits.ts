@@ -3,12 +3,12 @@ import { createModalFields } from "@magicyan/discord";
 import { TextInputStyle } from "discord.js";
 
 createResponder({
-  customId: "config/setup-limits",
+  customId: "config/limits",
   types: [ResponderType.Button],
   cache: "cached",
   async run(interaction) {
     return await interaction.showModal({
-      customId: "config/setup/complete",
+      customId: "config/complete",
       title: "Channel Limits Configuration",
       components: createModalFields({
         channelLimitForNormalUsers: {
