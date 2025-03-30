@@ -38,10 +38,10 @@ createEvent({
             description: `**Create and manage temporary voice channels with ease**\n
               **How it works:**
               Users can create temporary voice channels, and channel owners can manage them without needing special roles.\n
-              **Setup Guide:**
-              1. Users join a dedicated voice channel you'll configure
-              2. They automatically get their own temporary voice channel
-              3. As channel owner, they can customize settings and manage users\n
+              **Setup Guide:**\n
+              1. Users join a dedicated voice channel you'll configure\n
+              2. They automatically get their own temporary voice channel\n
+              3. As channel owner, they can customize settings and manage users\n\n
               Click the button below to complete the setup for your server.`,
             thumbnail: {
               url: guild.iconURL({ extension: "png" }) || "",
