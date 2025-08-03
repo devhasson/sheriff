@@ -8,19 +8,19 @@ createEvent({
   async run(oldState, _newState) {
     const { channel, guild, member } = oldState;
 
-    const guildOnDatabase = await prisma.guild.findUnique({
+    const guildConfig = await prisma.guildConfig.findUnique({
       where: {
-        id: guild.id,
+        guildId: guild.id,
       },
     });
 
-    if (!guildOnDatabase) return;
+    if (!guildConfig) return;
     if (!channel || !guild || !member) return;
     if (channel.type !== ChannelType.GuildVoice) return;
     if (channel.members.size > 0) return;
 
     const isTemporaryRoom = channel.name.includes(
-      `${member.user.username}'s - ${guildOnDatabase.temporaryChannelComplement}`
+      `${member.user.username}'s - ${guildConfig.temporaryChannelComplement}`
     );
 
     if (!isTemporaryRoom) return;

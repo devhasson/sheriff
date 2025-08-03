@@ -19,8 +19,8 @@ createResponder({
     );
 
     try {
-      await prisma.guild.update({
-        where: { id: guild.id },
+      await prisma.guildConfig.update({
+        where: { guildId: guild.id },
         data: {
           channelLimitForNormalUsers: Number(channelLimitForNormalUsers),
           channelLimitForBoosters: Number(channelLimitForBoosters),

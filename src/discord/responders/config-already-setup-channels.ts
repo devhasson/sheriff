@@ -13,9 +13,6 @@ createResponder({
 
     const categoryId = fields.getTextInputValue("categoryId");
     const voiceChannelId = fields.getTextInputValue("voiceChannelId");
-    const temporaryChannelComplement = fields.getTextInputValue(
-      "temporaryChannelComplement"
-    );
 
     const category = await guild.channels.fetch(categoryId);
 
@@ -36,20 +33,23 @@ createResponder({
     }
 
     try {
-      await prisma.guild.upsert({
-        where: { id: guild.id },
-        update: {
-          categoryName: category.name,
-          voiceChannelName: voiceChannel.name,
-          temporaryChannelComplement,
-          deletedAt: null,
-        },
-        create: {
-          id: guild.id,
-          categoryName: category.name,
-          voiceChannelName: voiceChannel.name,
-          temporaryChannelComplement,
-        },
+      await prisma.$transaction(async (tx) => {
+        await tx.guild.upsert({
+          where: { id: guild.id },
+          create: {
+            id: guild.id,
+          },
+          update: {
+            deletedAt: null,
+          },
+        });
+        await tx.guildConfig.update({
+          where: { guildId: guild.id },
+          data: {
+            categoryName: category.name,
+            voiceChannelName: voiceChannel.name,
+          },
+        });
       });
     } catch (error) {
       logger.error(error);

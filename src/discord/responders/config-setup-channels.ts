@@ -18,20 +18,31 @@ createResponder({
     );
 
     try {
-      await prisma.guild.upsert({
-        where: { id: guild.id },
-        update: {
-          categoryName,
-          voiceChannelName,
-          temporaryChannelComplement,
-          deletedAt: null,
-        },
-        create: {
-          id: guild.id,
-          categoryName,
-          voiceChannelName,
-          temporaryChannelComplement,
-        },
+      await prisma.$transaction(async (tx) => {
+        await tx.guild.upsert({
+          where: { id: guild.id },
+          update: {
+            deletedAt: null,
+          },
+          create: {
+            id: guild.id,
+          },
+        });
+
+        await tx.guildConfig.upsert({
+          where: { guildId: guild.id },
+          update: {
+            categoryName,
+            voiceChannelName,
+            temporaryChannelComplement,
+          },
+          create: {
+            guildId: guild.id,
+            categoryName,
+            voiceChannelName,
+            temporaryChannelComplement,
+          },
+        });
       });
 
       logger.success(`Guild ${guild.id} created on database.`);

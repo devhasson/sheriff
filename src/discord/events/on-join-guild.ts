@@ -13,9 +13,15 @@ createEvent({
       },
     });
 
+    const guildConfig = await prisma.guildConfig.findUnique({
+      where: {
+        guildId: guild.id,
+      },
+    });
+
     const isDeletedGuild = guildOnDatabase?.deletedAt !== null;
 
-    if (!guildOnDatabase || isDeletedGuild) {
+    if (!guildOnDatabase || isDeletedGuild || !guildConfig) {
       const onboardingChannel = await guild.channels.create({
         name: "sheriff-onboarding",
         type: ChannelType.GuildText,
@@ -69,7 +75,7 @@ createEvent({
     }
 
     const category = await guild?.channels.create({
-      name: guildOnDatabase.categoryName,
+      name: guildConfig?.categoryName,
       type: ChannelType.GuildCategory,
       permissionOverwrites: [
         {
@@ -80,7 +86,7 @@ createEvent({
     });
 
     return await guild.channels.create({
-      name: guildOnDatabase.voiceChannelName,
+      name: guildConfig.voiceChannelName,
       type: ChannelType.GuildVoice,
       parent: category,
       permissionOverwrites: [

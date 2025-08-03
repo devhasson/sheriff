@@ -23,13 +23,6 @@ createResponder({
           style: TextInputStyle.Paragraph,
           required: true,
         },
-        temporaryChannelComplement: {
-          label: "Temporary Channel Complement",
-          placeholder: "Temporary Channel Complement",
-          style: TextInputStyle.Paragraph,
-          maxLength: 64,
-          required: true,
-        },
       }),
     });
   },

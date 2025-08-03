@@ -8,25 +8,26 @@ createEvent({
   async run(_oldState, newState) {
     const { channel, guild, member } = newState;
 
-    const guildOnDatabase = await prisma.guild.findUnique({
+    const guildConfig = await prisma.guildConfig.findUnique({
       where: {
-        id: guild.id,
+        guildId: guild.id,
       },
     });
 
-    if (!guildOnDatabase) return;
+    if (!guildConfig) return;
     if (!channel || !guild || !member) return;
-    if (channel.name !== guildOnDatabase.voiceChannelName) return;
+
+    if (channel.name !== guildConfig.voiceChannelName) return;
 
     const userIsBooster = Boolean(member.premiumSince);
 
     const openCodeChannel = await guild.channels.create({
-      name: `${member.user.username}'s - ${guildOnDatabase.temporaryChannelComplement}`,
+      name: `${member.user.username}'s - ${guildConfig.temporaryChannelComplement}`,
       type: ChannelType.GuildVoice,
       parent: channel.parent,
       userLimit: userIsBooster
-        ? guildOnDatabase.channelLimitForBoosters
-        : guildOnDatabase.channelLimitForNormalUsers,
+        ? guildConfig.channelLimitForBoosters
+        : guildConfig.channelLimitForNormalUsers,
     });
 
     await member.voice.setChannel(openCodeChannel);

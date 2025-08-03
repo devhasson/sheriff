@@ -1,27 +1,35 @@
 model Guild {
-    id                         String         @id @unique
-    categoryName               String         @map("category_name")
-    voiceChannelName           String         @map("voice_channel_name")
-    temporaryChannelComplement String         @map("temporary_channel_complement")
-    channelLimitForNormalUsers Int            @default(5) @map("channel_limit_for_normal_users")
-    channelLimitForBoosters    Int            @default(15) @map("channel_limit_for_boosters")
-    channels                   GuildChannel[]
-
+    id        String    @id @unique
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
 
-    members Member[]
+    channels GuildChannel[]
+    members  Member[]
+    config   GuildConfig?
 
     @@map("guilds")
 }
 
+model GuildConfig {
+    id                         String @id @unique @default(cuid())
+    categoryName               String @map("category_name")
+    channelLimitForNormalUsers Int    @default(5) @map("channel_limit_for_normal_users")
+    channelLimitForBoosters    Int    @default(15) @map("channel_limit_for_boosters")
+    voiceChannelName           String @map("voice_channel_name")
+    temporaryChannelComplement String @map("temporary_channel_complement")
+
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String @unique @map("guild_id")
+
+    @@index([guildId])
+    @@map("guild_configs")
+}
+
 model GuildChannel {
-    name String @id
-
-    id  String
-    url String
-
+    name    String @id
+    id      String
+    url     String
     guild   Guild  @relation(fields: [guildId], references: [id])
     guildId String
 
