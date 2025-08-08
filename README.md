@@ -12,6 +12,8 @@ A powerful Discord bot that allows users to create and manage temporary voice ch
   - 🚫 Ban problematic users
   - ✅ Unban users
   - 👑 Transfer channel ownership
+  - 🔇 Mute or unmute participants
+  - 🔒 Lock or unlock the channel for new connections
 
 - **Permissions Management**: Sheriff automatically handles all permission settings - no need to give users roles
 - **Nitro Booster Perks**: Server boosters get higher channel limits
@@ -45,6 +47,10 @@ A powerful Discord bot that allows users to create and manage temporary voice ch
 | `/voice-kick @user`     | Kicks a user from your voice channel                      |
 | `/voice-transfer @user` | Transfers ownership of your voice channel to another user |
 | `/voice-limit <number>` | Sets the user limit for your voice channel                |
+| `/voice-mute @user`     | Mutes a user in your voice channel                        |
+| `/voice-unmute @user`   | Unmutes a user in your voice channel                      |
+| `/voice-lock`           | Blocks new users from joining your voice channel          |
+| `/voice-unlock`         | Allows users to join your voice channel again             |
 
 ## Requirements 🔧
 
