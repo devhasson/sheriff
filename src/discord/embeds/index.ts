@@ -11,3 +11,7 @@ export * from "./limit-denied-booster-user.js";
 export * from "./cannot-target-self.js";
 export * from "./cannot-target-bot.js";
 export * from "./sheriff-not-configured.js";
+export * from "./user-muted.js";
+export * from "./user-unmuted.js";
+export * from "./channel-locked.js";
+export * from "./channel-unlocked.js";
